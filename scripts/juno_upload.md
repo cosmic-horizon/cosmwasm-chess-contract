@@ -1,17 +1,13 @@
 # Notes from deploying junochess 0.3.0
 
-- use junod 2.1.0 in a container
-
-```bash
-docker run --rm -it --platform linux/amd64 -v "$(pwd)/artifacts:/artifacts:ro" ghcr.io/cosmoscontracts/juno:v2.1.0 /bin/sh
-```
+- install v5.2.0 qwoyn binary
 
 - configure environment
 
 ```sh
-RPC="https://rpc.juno.omniflix.co:443"
-CHAIN_ID="juno-1"
-GAS_PRICES="0.025ujuno"
+RPC="http://66.42.74.12:26657"
+CHAIN_ID="earendel-1"
+GAS_PRICES="0.025uqwoyn"
 export NODE="${RPC}"
 export TXFLAG="--node ${NODE}  --chain-id ${CHAIN_ID} --gas-prices ${GAS_PRICES} --gas auto --gas-adjustment 1.3"
 ```
@@ -19,9 +15,9 @@ export TXFLAG="--node ${NODE}  --chain-id ${CHAIN_ID} --gas-prices ${GAS_PRICES}
 - setup `chess` key with at least 1 JUNO
 
 ```sh
-junod keys add chess --recover
+qwoynd keys add chess --recover
 # ...
-junod query bank balances "addr"
+qwoynd query bank balances "addr"
 # ...
 ```
 
@@ -31,7 +27,7 @@ junod query bank balances "addr"
 - store wasm
 
 ```sh
-junod tx wasm store /artifacts/0.3.0/cosmwasm_chess.wasm --from chess $TXFLAG
+qwoynd tx wasm store /artifacts/0.3.0/cosmwasm_chess.wasm --from chess $TXFLAG
 ```
 
 > - code_id `165`
@@ -41,7 +37,7 @@ junod tx wasm store /artifacts/0.3.0/cosmwasm_chess.wasm --from chess $TXFLAG
 - instantiate contract
 
 ```sh
-junod tx wasm instantiate 165 '{}' --from chess --label "junochess 0.3.0" $TXFLAG --admin juno1qzmu3y33vhwhexwwtctp7e3fn20qnfphy3f04w
+qwoynd tx wasm instantiate <replace with code ID> '{}' --from chess --label "junochess 0.3.0" $TXFLAG --admin juno1qzmu3y33vhwhexwwtctp7e3fn20qnfphy3f04w
 ```
 
 > - contract address `juno1dk8kw6dwh6ugejuvkzumteu7pkj5vjkdl7pm8qwk5qtz7k2fh0kqce0s6f`
